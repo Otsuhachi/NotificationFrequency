@@ -11,5 +11,5 @@ flake8 = "*"
 otsuvalidator = "*"
 
 [requires]
-python_version = "3.7"
-python_full_version = "3.7.9"
+python_version = "3.10"
+python_full_version = "3.10.8"

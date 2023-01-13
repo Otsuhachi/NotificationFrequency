@@ -5,7 +5,7 @@
 __all__ = ("NotificationFrequency",)
 
 
-from typing import Collection, Iterable, Iterator, Tuple, Union
+from typing import Collection, Iterable, Iterator
 
 from .cfg import REGEX_NF_VALUE, T
 
@@ -22,14 +22,14 @@ class NotificationFrequency:
 
     """
 
-    def __init__(self, nf_value: Union[int, str, "NotificationFrequency"]) -> None:
+    def __init__(self, nf_value: int | str | "NotificationFrequency") -> None:
         """進捗管理インスタンスを生成します。
 
         整数または整数のみで構成された文字列を与えた場合はその要素数毎にタイミングを通知します。
         整数のみの文字列の末尾に"%"を付けると進捗率がn%進む度にタイミングを通知します。
 
         Args:
-            nf_value (Union[int, str, "NotificationFrequency"]): 処理を挟む頻度。
+            nf_value (int | str | "NotificationFrequency"): 処理を挟む頻度。
 
         Raises:
             ValueError: nf_valueが不正な値の場合に投げられます。
@@ -41,8 +41,7 @@ class NotificationFrequency:
             nf_value = str(nf_value)
         ng = False
         if type(nf_value) is str:
-            find = REGEX_NF_VALUE.search(nf_value)
-            if find is not None:
+            if (find := REGEX_NF_VALUE.search(nf_value)) is not None:
                 v, p = find.groups()
                 v = int(v)
                 if p is not None:
@@ -61,7 +60,7 @@ class NotificationFrequency:
             msg = f'"{nf_value}"は使用できない値です。'
             raise ValueError(msg)
 
-    def __call__(self, idx: int) -> Tuple[bool, int]:
+    def __call__(self, idx: int) -> tuple[bool, int]:
         return self.check_and_get_percentage(idx)
 
     def __eq__(self, __o: object) -> bool:
@@ -75,7 +74,7 @@ class NotificationFrequency:
             res.append("%")
         return "".join(res)
 
-    def check_and_get_percentage(self, idx: int) -> Tuple[bool, int]:
+    def check_and_get_percentage(self, idx: int) -> tuple[bool, int]:
         """idx番目の要素が特殊処理を挟むタイミングかを判定し、進捗率と共に返します。
 
         `nf.check_and_get_percentage(idx)`と`nf(idx)`は等価になります。
@@ -87,7 +86,7 @@ class NotificationFrequency:
             AttributeError: 管理するイテラブルの要素数が設定されていない場合に投げられます。
 
         Returns:
-            Tuple[bool, int]: (タイミングか, 進捗率)のタプル。
+            tuple[bool, int]: (タイミングか, 進捗率)のタプル。
         """
         if self.length == -1:
             msg = "このインスタンスで進捗管理するイテラブルの要素数を与えてください。"
@@ -106,7 +105,7 @@ class NotificationFrequency:
             ok = True
         return ok, percentage
 
-    def for_collection(self, it: Collection[T]) -> Iterator[Tuple[bool, int, int, T]]:
+    def for_collection(self, it: Collection[T]) -> Iterator[tuple[bool, int, int, T]]:
         """(タイミングか, インデックス, 進捗率, コレクションの要素)のタプルを順次返すイテレータを生成します。
 
         インデックスは1からカウントされます。
@@ -115,11 +114,11 @@ class NotificationFrequency:
             it (Collection[T]): 進捗管理したいコレクション。
 
         Yields:
-            Iterator[Tuple[bool, int, int, T]]: (タイミングか, インデックス, 進捗率, コレクションの要素)のタプル。
+            Iterator[tuple[bool, int, int, T]]: (タイミングか, インデックス, 進捗率, コレクションの要素)のタプル。
         """
         yield from self.for_iterable(it, len(it))
 
-    def for_iterable(self, it: Iterable[T], length: int) -> Iterator[Tuple[bool, int, int, T]]:
+    def for_iterable(self, it: Iterable[T], length: int) -> Iterator[tuple[bool, int, int, T]]:
         """(タイミングか, インデックス, 進捗率, コレクションの要素)のタプルを順次返すイテレータを生成します。
 
         インデックスは1からカウントされます。
@@ -129,7 +128,7 @@ class NotificationFrequency:
             length (int): イテラブルの要素数。
 
         Yields:
-            Iterator[Tuple[bool, int, int, T]]: (タイミングか, インデックス, 進捗率, コレクションの要素)のタプル。
+            Iterator[tuple[bool, int, int, T]]: (タイミングか, インデックス, 進捗率, コレクションの要素)のタプル。
         """
         nf = NotificationFrequency(self)
         nf.set_length(length)
