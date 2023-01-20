@@ -5,7 +5,7 @@
 __all__ = ("NotificationFrequency",)
 
 
-from typing import Any, Collection, Iterable, Iterator
+from typing import Any, Collection, Iterable, Iterator, Self
 
 from .cfg import REGEX_NF_VALUE, T
 
@@ -22,14 +22,14 @@ class NotificationFrequency:
 
     """
 
-    def __init__(self, nf_value: int | str | Any) -> None:
+    def __init__(self, nf_value: int | str | Self) -> None:
         """進捗管理インスタンスを生成します。
 
         整数または整数のみで構成された文字列を与えた場合はその要素数毎にタイミングを通知します。
         整数のみの文字列の末尾に"%"を付けると進捗率がn%進む度にタイミングを通知します。
 
         Args:
-            nf_value (int | str | Any): 処理を挟む頻度。
+            nf_value (int | str | Self): 処理を挟む頻度。
 
         Raises:
             ValueError: nf_valueが不正な値の場合に投げられます。

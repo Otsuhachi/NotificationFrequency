@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-__VERSION__ = "1.0.4.310"
+__VERSION__ = "1.0.4.311"
 
 with open("README.md", "r", encoding="utf-8") as f:
     readme = f.read()
@@ -20,5 +20,5 @@ setup(
     include_package_data=True,
     license=lcs,
     keywords="Python Notification Frequency",
-    python_requires=">=3.10",
+    python_requires=">=3.11",
 )
